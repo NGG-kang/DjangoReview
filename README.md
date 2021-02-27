@@ -1,14 +1,20 @@
 # DjangoReview
 
+[TOC]
+
+### 개요
+
 이 페이지는 github django 페이지의 코드들을 파헤쳐서 학습 한 내용과
 
 강의 내용을 정리할 내용들의 메인 페이지 입니다
 
-주관적으로 이해 한 내용이므로 정확하지 않을 수 있습니다
+주관적인 의견이나 생각이 있으며, 정확하지 않을 수 있습니다.
 
 2021/02/27을 기점으로 시작한 페이지 입니다
 
 추가되지 않은 내용들이 많을 수 있습니다
+
+Django 3.1 을 토대로 작성하는 페이지 입니다
 
 
 
@@ -22,11 +28,17 @@
 
 django github 의 코드들을 나름대로 정리 한 페이지 입니다
 
+
+
+파일 정리 페이지 : Django/files/~
+
+django 프로젝트, 앱 생성시 만들어지는 파일들을 정리한 페이지 입니다
+
 참초 : [djangoGithub](https://github.com/django/django) , [djangoDoc](https://docs.djangoproject.com/ko/3.1/)
 
 강의 : [Educast Ask Company](https://educast.com/course/web-dev/ZU53)
 
-
+---
 
 ####  나름대로의 우선순위(django 코드 파헤치기)
 
@@ -48,9 +60,9 @@ django github 의 코드들을 나름대로 정리 한 페이지 입니다
 12. 장고 보안에 관련하여 알아보기
 13. 그 외에 django github에 보지 못했던 코드들이 있나 확인하기
 
+---
 
-
-일일 회고록
+#### 일일 회고록 
 
 2021-02-27 
 
