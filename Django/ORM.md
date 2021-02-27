@@ -18,7 +18,18 @@ django ORM은 RBS만을 지원한다
 
 SQL을 직접 실행 할 수는 있으나, 가능하면 ORM을 쓰는게 좋다
 
-from django.db import connection, connections
+```python
 
+```
+
+from django.db import connection, connections
 with connection.cursor() as cursor:
-	cursor.excute("Update")
+	cursor.excute("UPDATE bar SET foo = 1 WHERE baz = %s", [self.baz])
+
+​	cursor.execute("SELECT foo FROM bar WHERE baz = %s", [self.baz])
+
+​	print(row)
+
+```
+
+```
