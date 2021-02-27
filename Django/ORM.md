@@ -1,6 +1,6 @@
-# Django Model
+# Django ORM
 
-## 1. ORM
+#### 1. ORM
 
 Object Relational Mapping
 
@@ -18,6 +18,8 @@ django ORM은 RBS만을 지원한다
 
 SQL을 직접 실행 할 수는 있으나, 가능하면 ORM을 쓰는게 좋다
 
+예시로 쓰는법 / 나중에 쓸 일이 있을지는 모르겠다
+
 ```python
 from django.db import connection, connections
 with connection.cursor() as cursor:
@@ -25,3 +27,16 @@ with connection.cursor() as cursor:
 	cursor.execute("SELECT foo FROM bar WHERE baz = %s", [self.baz])
 	print(row)
 ```
+
+
+
+#### 2. DB 테이블과 파이썬 클래스는 1:1로 매핑된다
+
+`models.py`에서 설계한 class들은 DB와 1:1로 매핑됨
+
+서비스에 맞춰서 데이터베이스 설계가 필요하다
+
+
+
+
+

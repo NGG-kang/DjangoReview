@@ -1,0 +1,11 @@
+/venv
+/.idea
+/__pycache__
+
+.pyc
+.idea
+
+/Django/Django_practice/venv
+/Django/Django_practice/.idea
+/Django/Django_practice/project/project/__pycache__
+
