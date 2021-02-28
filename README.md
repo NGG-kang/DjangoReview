@@ -18,21 +18,21 @@ Django 3.1 을 토대로 작성하는 페이지 입니다
 
 
 
-강의 정리 페이지 : Django/Django_practice/~
+강의 정리 폴더 : Django/Django_practice/~
 
 강의 정리 페이지는 코드 파헤치기와 연계하여 연습한 코드도 포함 되어 있습니다
 
 
 
-코드 정리 페이지 : Django/~
+코드 정리 폴더 : Django/~
 
 django github 의 코드들을 나름대로 정리 한 페이지 입니다
 
 
 
-파일 정리 페이지 : Django/files/~
+파일 정리 폴더 : Django/files/~
 
-django 프로젝트, 앱 생성시 만들어지는 파일들을 정리한 페이지 입니다
+django 프로젝트, 앱 생성시 만들어지는 파일들을 참조 페이지를 토대로 공부하는 페이지 입니다
 
 참초 : [djangoGithub](https://github.com/django/django) , [djangoDoc](https://docs.djangoproject.com/ko/3.1/)
 
@@ -66,21 +66,56 @@ django 프로젝트, 앱 생성시 만들어지는 파일들을 정리한 페이
 
 ##### 2021-02-27 
 
-오늘 한 일
+**회고**
 
 models의 fields에 쓰이는 options를 정리 해봤다
 
 솔직히 외우거나 꼭 필요한 거는 없었고 validator로 따로 함수로 만들어서 제약조건을 넣는 정도만 알아도 충분하다 싶었다 내일은 조금더 많이 공부해야지
+
+**오늘 한 일**
 
 1. first commit
 2. django github의 django 폴더들 임시 생성
 3. 메인 README.md 파일에 우선순위 정리
 4. Django/fiels/models.md 모델 옵션 추가
 
-내일 할 일
+**내일 할 일**
 
 1. 자동 기본 키 필드 
-2. 다양한 필드들
-3. 관계
-4. Meta 옵션
+2. ~~다양한 필드들~~
+3. ~~관계~~
+4. ~~Meta 옵션~~
 
+
+
+##### 2021-02-28
+
+**회고**
+
+[django의 설계 철학](https://docs.djangoproject.com/ko/3.1/misc/design-philosophies/#views)
+
+Fiedl API reference
+
+django Docs에 내용들을 읽어가면서 정리를 하려고 하니까 과연 이렇게 하는게 맞는것인지 회의감이 들었다. 얼마 안하는데도 솔직히 시작부터 너무 이론적으로 파고들려고 하지 않았나 싶다...
+
+솔직히 정말로 돌아가는지도 확인 할 수가 없어서 직접 해봐가면서 하는게 좋을듯 하다
+
+새로운 django 앱을 하나 만들어서 하나하나 공부하는거로 해야 할까?
+
+django 강의 들으면서 공부와, 내가 앱 만들어가면서 공부를 한번 해 봐야 할 거 같다
+
+그러면서 django 코드들 파서 뭐가 있는지도 확인도 하고 그렇게 진행을 해 봐야 할거같다
+
+
+
+**오늘 한 일**
+
+1. ~~다양한 필드들~~
+2. ~~관계~~
+3. ~~Meta 옵션~~
+4. Model
+
+**내일 할 일**
+
+1. Model쪽 강의 들으면서 정리하기
+2. 새로운 앱 만들어서 인스타그램? 클론코딩 해보기
