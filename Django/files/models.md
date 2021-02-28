@@ -44,7 +44,9 @@ class Post(models.Model):
 
 ​	`python manage.py sqlmigrate` <app-name> <migration-name>
 
-## 모델 필드 옵션
+## 필드
+
+### 모델 필드 옵션
 
 `a = model.CharField(<options>)` <options> 안에 넣는 모델 필드 옵션들이다
 
@@ -180,45 +182,109 @@ class OptionFields(models.Model):
 
 
 
-## 모델 필드 종류
+### 모델 필드 종류
 
 
 
 모든 필드들을 다 쓸까 하다가 너무 비효율적이라 Django Docs의 fields 링크를 남긴다
 
-[DjangoFieldsDoc](https://docs.djangoproject.com/ko/3.1/ref/models/fields/)
+각 필드별로 옵션이 있을 수 있다
+
+참조 : [DjangoFieldsDoc](https://docs.djangoproject.com/ko/3.1/ref/models/fields/#field-types)
 
 
+
+너무 많으니 몇개만 가져와 보자
 
 [ImageField](https://docs.djangoproject.com/ko/3.1/ref/models/fields/#choices) / pillow 라이브러리 필요
 
-
-
-## 모델의 제약조건
-
-
-
-## 쿼리 만들기?
+DateTimField `DateTimeField(auto_now=False,auto_now_add=False)`
 
 
 
-제약조건 ex) 정렬 등
+### 관계 필드
 
-many to many
+#### ForeignKey
 
-one to many
+```python
+# ForeignKey
+# 다대일의 관계
+# on_delete에 대한 옵션은 나중에 지정 될 수가 있다
 
-foriengkey
+# CASCADE : 외래키 삭제시 같이 삭제
+a = models.ForeignKey('MODEL', on_delete=models.CASCADE)
+# PROTECTED error를 발생시켜 삭제 방지
+a = models.ForeignKey('MODEL', on_delete=models.PROTECT)
+# 직접적인 삭제는 불가능하고, CASCADE 관계를 통해 삭제된다
+a = models.ForeignKey('MODEL', on_delete=models.RESTRICT, default="", )
+# 그외에 SET_NULL, SET_DEFAULT, SET(), DO_NOTHING이 있다
+# 이름에 나와있듯 null, 디폴트값 설정(디폴트 값이 있어야함), SET(function), DO_NOTING은 가만히 있기
 
-absolute url 등 
+# limit_choice_to
+# 말 그대로 이 필드에 대한 선택 제한
+staff_member = models.ForeignKey(
+    User,
+    on_delete=models.CASCADE,
+    limit_choices_to={'is_staff': True},
+)
+```
 
-model class에 정하고 
-
-함수로 따로 정할수 있는 것들
 
 
+#### ManyToManyField
 
-기타
+```python
+# ManyToManyField
+# 다대다 관계
+# 다대다 관계 생성시 django는 관계를 나타내는 중간 조인 테이블을 만든다
+# 기본적으로 이 테이블은 필드와 모델의 테이블 이름을 사용하여 생성된다
+# db_table 옵션을 사용하여 이름을 바꿀수 있다
+# 왜래키처럼 인수가 필요 할 때 하단 참조
+# https://docs.djangoproject.com/ko/3.1/ref/models/fields/#manytomany-arguments
+a = models.ManyToManyField('MODEL')
+```
 
-pagination 
+#### OneToOneField
+
+```python
+# OneToOneField
+# 일대일 관계, 개념적으론 외래키와 유사하고, unique=True이다
+# 하지만 역참조에서는 단일 객체를 직접 리턴한다
+a = models.OneToOneField('MODEL', models.CASCADE)
+```
+
+## Meta 옵션
+
+다음과 같이 모델 메타 데이터를 제공한다
+
+```python
+from django.db import models
+
+class Ox(models.Model):
+    horn_length = models.IntegerField()
+
+    class Meta:
+        ordering = ["horn_length"]
+        verbose_name_plural = "oxen"
+```
+
+장고 메타 옵션 참조 : [metaOption](https://docs.djangoproject.com/ko/3.1/ref/models/options/)
+
+자주 쓸만한거 몇개만 뽑아보자면
+
+`abstract = True`  사용시 추상 베이스 클래스로 변한다
+
+`db_table='table'` 모델에 사용할 데이터베이스 테이블 이름 지정 
+
+`get_latest_by="pub_date"` QuerySet에 있는 lastest() 또는 earliest() 메소드에  적용되는 옵션이다
+
+`ordering=['pub_date']`가장 기본적인 객체의 기본 순서, 역방향시 ' - ' 추가, 정렬 여러개 가능
+
+## 모델 메소드
+
+메소드를 지정하거나
+
+ `__str__()`, `get_absolute_url()` 과같은 이미 정의된 메소드도 있고
+
+미리 정의된 save(), delete()를 재정의 할 수 있다.
 
