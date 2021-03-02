@@ -2,10 +2,19 @@
 /.idea
 /__pycache__
 
-.pyc
-.idea
+*/venv
+*/.idea
+*/__pycache__
 
-/Django/Django_practice/venv
-/Django/Django_practice/.idea
-/Django/Django_practice/project/project/__pycache__
+*.pyc
+*.idea
+*.sqlite3
 
+MixedDjango/venv/
+Django/Django_practice/venv
+Django/Django_practice/.idea
+Django/Django_practice/project/project/__pycache__
+Django/django_practice/project/project/__pycache__/
+Django/Django_practice/project/db.sqlite3
+Django/django_practice/project/project/__pycache__/settings.cpython-39.pyc
+Django/django_practice/project/instagram/__pycache__/admin.cpython-39.pyc
