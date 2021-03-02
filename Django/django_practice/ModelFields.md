@@ -76,7 +76,7 @@ choices : select 박스 소스로 사용
 
 validators : validators를 수행할 함수를 다수 지정
 
-verbose_name : 필드 레이블, 미지정시 필드명 사용
+verbose_name : 필드 레이블(제목), 미지정시 필드명 사용
 
 help_text : 필드 입력 도움말
 
