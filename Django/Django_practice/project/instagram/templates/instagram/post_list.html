@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<form method="get" action="">
+    <input type="text" name="q" value="{{ q }}" />
+    <input type="submit" value="검색"/>
+</form>
+
+
+{% for post in post_list %}
+<div>
+    {{ post.message }}
+    <img src="{{ post.photo.url }}">
+</div>
+{% endfor %}
+
+</body>
+</html>
