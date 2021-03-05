@@ -13,5 +13,6 @@ class YearConverter:
 register_converter(YearConverter, 'year')
 urlpatterns=[
     path('', views.post_list),
-    path('<int:pk>/', views.post_detail),
+    path('archives/<year:year>/'),
+    re_path(r'archives/(?P<year>\d+)/'),
 ]
