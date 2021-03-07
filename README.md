@@ -256,3 +256,23 @@ django의 static, forms 아주 조금 했다
 django form 더 공부하기
 
 가능하면 다음 챕터인 django 인증 공부하기
+
+
+
+**2021-03-07**
+
+오늘 한 일
+
+django forms에 대해 다 본건 아니지먼 거의 끝까지 봤다
+
+중간의 csrf_token이랑 messages가 껴있어서 왔다갔다 한 느낌이다
+
+오늘도 열심히 놀았다
+
+
+
+내일 할일
+
+django form 마저 끝내기
+
+django 인증 공부 끝내기
