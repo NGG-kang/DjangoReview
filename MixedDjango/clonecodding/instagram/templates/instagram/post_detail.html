@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {{ post.author }}
+    {{ post.message }}
+<a href="{% url 'instagram:post_update' post.id %}">포스팅 수정</a>
+</body>
+</html>

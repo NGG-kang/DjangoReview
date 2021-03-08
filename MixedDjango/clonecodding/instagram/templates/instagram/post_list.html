@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if post_list %}
+        {% for post in post_list %}
+            {{ post.author }}<br/>
+                <a href="{% url 'instagram:post_detail' post.id %}">{{ post.message }}</a>
+            {{ post.photo }}
+        {% endfor %}
+    {% endif %}
+    <a href="{% url 'instagram:post_create' %}">새 글 쓰기</a>
+
+</body>
+</html>
