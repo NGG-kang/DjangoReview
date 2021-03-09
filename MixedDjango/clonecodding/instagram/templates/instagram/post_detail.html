@@ -1,12 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+<div>
     {{ post.author }}
     {{ post.message }}
-<a href="{% url 'instagram:post_update' post.id %}">포스팅 수정</a>
-</body>
-</html>
+    {% if post.photo %}
+    <img src="{{ post.photo.url }}" style="width:150px;height=150px"/>
+    {% endif %}
+
+    <a href="{% url 'instagram:post_update' post.id %}">포스팅 수정</a>
+    <a href="{% url 'instagram:post_delete' post.id %}">포스팅 삭제</a>
+</div>
+
+{% endblock %}
+
+
