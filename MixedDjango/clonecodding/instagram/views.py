@@ -1,10 +1,42 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 from django.contrib import messages
-from . models import Post
-from . forms import PostForm
-# Create your views here.
+from .models import Post
+from .forms import PostForm
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+
+
+class PostListView(ListView):
+    paginate_by = 9
+
+    def get_queryset(self):
+        if not self.request.user.is_anonymous:
+            self.queryset = Post.objects.filter(author=self.request.user)
+            print(self.queryset)
+            if not self.queryset:
+                self.queryset = '1'
+            return self.queryset
+
+
+    # def get(self, request, *args, **kwargs):
+    #
+    #     if not request.user.is_anonymous:
+    #         qs = Post.objects.filter(author=request.user)
+    #         self.paginate_by = 9
+    #         self.allow_empty = False
+    #         if qs:
+    #             self.object_list = qs
+    #             return self.render_to_response({'post_list':qs})
+    #             # return render(request, 'instagram/post_list.html', {
+    #             #     'post_list': qs
+    #             # })
+    #     return render(request, 'instagram/post_list.html', {
+    #         'post_list': None
+    #     })
+
 
 
 
@@ -25,27 +57,68 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
 
+    def get(self, request, *args, **kwargs):
+        self.object = get_object_or_404(Post, pk=kwargs['pk'])
+        if self.object.author != request.user:
+            messages.warning(self.request, '작성한 회원만 수정할 수 있습니다')
+            return redirect(self.object)
+        form = PostForm
+        return super(PostUpdateView, self).get(form)
+
     def form_valid(self, form):
-        messages.success(self.request, '포스팅 수정 완료')
+        self.object = form.save(commit=False)
+        if self.object.author == self.request.user:
+            messages.success(self.request, '포스팅 수정 완료')
+        else:
+            messages.warning(self.request, '작성한 회원만 수정할 수 있습니다')
         return super().form_valid(form)
 
 
-def post_delete(request, pk):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
-    messages.warning(request, '정말 삭제 하시겠습니까?')
-    if request.method == 'POST':
-        post = get_object_or_404(model, pk=pk)
-        post.delete()
+    template_name_suffix = '_delete'
+    success_url = 'instagram/post_list.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = get_object_or_404(Post, pk=kwargs['pk'])
+        if self.object.author != request.user:
+            messages.warning(self.request, '작성한 회원만 삭제할수 있습니다')
+            return redirect(self.object)
+        return super(PostDeleteView, self).get(Post)
+
+    def post(self, request, *args, **kwargs):
+        self.object = get_object_or_404(Post, pk=kwargs['pk'])
+        if self.object.author != request.user:
+            messages.warning(self.request, '작성한 회원만 삭제할수 있습니다')
+            return redirect(self.object)
+        self.object.delete()
         messages.success(request, '포스팅 삭제 완료')
         return redirect('instagram:post_list')
-    return render(request, 'instagram/post_delete.html', {
-
-    })
 
 
 
 
+# 함수기반
+# @login_required
+# def post_delete(request, pk):
+#     model = Post
+#     post = get_object_or_404(model, pk=pk)
+#     if post.author == request.user:
+#         messages.warning(request, '정말 삭제 하시겠습니까?')
+#         if request.method == 'POST':
+#             post.delete()
+#             messages.success(request, '포스팅 삭제 완료')
+#             return redirect('instagram:post_list')
+#     else:
+#         messages.warning(request, '작성한 회원만 삭제할 수 있습니다')
+#         return redirect(post)
+#     return render(request, 'instagram/post_delete.html', {
+#     })
+
+#
 post_create = PostCreateView.as_view()
 post_update = PostUpdateView.as_view()
-post_list = ListView.as_view(model = Post)
+post_list = PostListView.as_view()
+post_delete = PostDeleteView.as_view()
 post_detail = DetailView.as_view(model=Post)
+
