@@ -18,14 +18,28 @@
             <a class="p-2 text-dark" href="#">Support</a>
             <a class="p-2 text-dark" href="#">Pricing</a>
         </nav>
-        <a class="btn btn-outline-primary" href="#">Sign up</a>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-primary me-2">로그인</a>
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary">회원가입</a>
+        {% else %}
+            <a href="{% url 'accounts:logout' %}?next={{ request.get_full_path }}" class="btn btn-primary">로그아웃</a>
+        {% endif %}
     </header>
     {% if messages %}
     {% bootstrap_messages %}
     {% endif %}
+    {% block new %}
+        {% endblock %}
+    <div class="album py-5 bg-light">
 
-    {% block content %}
-    {% endblock %}
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
     <div class="row">
       <div class="col-12 col-md">
