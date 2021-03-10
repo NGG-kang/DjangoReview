@@ -1,6 +1,10 @@
+{% extends "base.html" %}
 
-{% extends "form.html" %}
 {% load bootstrap4 %}
+
+{% block content %}
+{% include "form.html" with submit_label="로그인" %}
 {% buttons %}
-<button type="submit">로그인</button>
+
 {% endbuttons %}
+{% endblock %}

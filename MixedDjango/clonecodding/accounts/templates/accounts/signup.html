@@ -1,7 +1,9 @@
+{% extends "base.html" %}
 
-{% extends "form.html" %}
 {% load bootstrap4 %}
 
+{% block content %}
+{% include "form.html" with submit_label="회원가입" %}
 {% buttons %}
-<button type="submit">가입</button>
 {% endbuttons %}
+{% endblock %}

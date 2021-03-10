@@ -2,8 +2,7 @@
 {% load bootstrap4 %}
 
 {% block content %}
-{% include "form.html" %}
+{% include "form.html" with submit_label="포스트 수정" %}
 {% buttons %}
-<button type="submit">포스팅 수정</button>
 {% endbuttons %}
 {% endblock %}
