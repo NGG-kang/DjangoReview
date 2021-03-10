@@ -3,7 +3,6 @@ from django.urls import path
 from .views import post_list, post_update, post_create, post_detail, post_delete
 
 
-
 app_name = 'instagram'
 urlpatterns = [
     path('', post_list, name='post_list'),
