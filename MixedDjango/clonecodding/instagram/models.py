@@ -12,8 +12,12 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     like_user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_post_set", blank=True)
 
+    class Meta:
+        ordering = ['-id']
+
     def get_absolute_url(self):
         return reverse('instagram:post_detail', args=[self.pk])
+
 
 
 
