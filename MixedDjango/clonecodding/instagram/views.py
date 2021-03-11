@@ -8,38 +8,51 @@ from .forms import PostForm
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
+# 함수기반
+# def post_list(request):
+#     post_list = Post.objects.filter(author=request.user)
+#
+#
+#     return render(request, 'instagram/post_list.html', {
+#         'post_list': post_list
+#     })
+#
+# def post_create(request):
+#     form = PostForm(request.POST, request.FILES)
+#     pass
+#
+# def post_modify(request, pk):
+#     pass
+#
+# def post_delete(request, pk):
+#     pass
+
 
 class PostListView(ListView):
-    paginate_by = 9
-
-    def get_queryset(self):
-        if not self.request.user.is_anonymous:
-            self.queryset = Post.objects.filter(author=self.request.user)
-            print(self.queryset)
-            if not self.queryset:
-                self.queryset = '1'
-            return self.queryset
 
 
-    # def get(self, request, *args, **kwargs):
-    #
-    #     if not request.user.is_anonymous:
-    #         qs = Post.objects.filter(author=request.user)
-    #         self.paginate_by = 9
-    #         self.allow_empty = False
-    #         if qs:
-    #             self.object_list = qs
-    #             return self.render_to_response({'post_list':qs})
-    #             # return render(request, 'instagram/post_list.html', {
-    #             #     'post_list': qs
-    #             # })
-    #     return render(request, 'instagram/post_list.html', {
-    #         'post_list': None
-    #     })
-
-
-
-
+    # def get_queryset(self):
+    # get_queryset의 다음에 페이지네이터가 구현되어 있어서 paginate_by를 쓸 수 있다
+    #         if not self.request.user.is_anonymous:
+    #             self.queryset = Post.objects.filter(author=self.request.user)
+    #             if not self.queryset:
+    #                 self.queryset = None
+    #             return self.queryset
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_anonymous:
+            qs = Post.objects.all()
+            if qs:
+                paginator, page, queryset, is_paginated = super().paginate_queryset(qs, 9)
+                context = {
+                    'paginator': paginator,
+                    'page': page,
+                    'is_paginated': is_paginated,
+                    'post_list': queryset,
+                }
+                return render(request, 'instagram/post_list.html', context)
+        return render(request, 'instagram/post_list.html', {
+            'post_list': None
+        })
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -47,6 +60,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
 
     def form_valid(self, form):
+        print(form.cleaned_data)
         self.object = form.save(commit=False)
         self.object.author = self.request.user
         messages.success(self.request, '포스팅 저장 완료')
