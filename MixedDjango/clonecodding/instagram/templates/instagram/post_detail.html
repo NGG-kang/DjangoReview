@@ -1,15 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    {{ post.author }}
-    {{ post.message }}
-    {% if post.photo %}
-    <img src="{{ post.photo.url }}" style="width:150px;height=150px"/>
-    {% endif %}
+<div class="container">
+    <div class="card">
+        {% if post.photo %}
+        <img src="{{ post.photo.url }}" class="card-img-top" alt="post_photo">
+        {% else %}
+        <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+            <rect width="100%" height="100%" fill="#55595c"></rect>
+            <text x="38%" y="50%" fill="#eceeef" dy=".3em">이미지 없음</text>
+        </svg>
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ post.author }}</h5>
+            <p class="card-text">{{ post.message }}</p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
 
-    <a href="{% url 'instagram:post_update' post.id %}" class="btn btn-primary">포스팅 수정</a>
-    <a href="{% url 'instagram:post_delete' post.id %}" class="btn btn-primary">포스팅 삭제</a>
+    </div>
+    <div class="container mt-3">
+        <a href="{% url 'instagram:post_update' post.id %}" class="btn btn-primary">포스팅 수정</a>
+        <a href="{% url 'instagram:post_delete' post.id %}" class="btn btn-primary">포스팅 삭제</a>
+    </div>
+
 </div>
 
 {% endblock %}
