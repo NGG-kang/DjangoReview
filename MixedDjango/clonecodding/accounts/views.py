@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import UserForm
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model, login
+from .models import Profile
 # Create your views here.
 
 
@@ -13,7 +14,6 @@ class LoginView(LoginView):
 
 
 def signup_view(request):
-
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
