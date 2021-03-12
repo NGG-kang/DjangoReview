@@ -6,7 +6,7 @@ from django.urls import reverse
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     message = models.CharField(max_length=300)
-    photo = models.ImageField(upload_to="instagram/post/%Y/%m/%d",blank=True)
+    photo = models.ImageField(upload_to="instagram/post/%Y/%m/%d", blank=True)
     tag = models.ManyToManyField('Tag', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

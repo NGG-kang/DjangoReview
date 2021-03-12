@@ -29,8 +29,9 @@
                     {% endif %}
                     <div class="card-body">
                         <p class="card-text">
-                            {% if post.message
+                            {% if post.message %}
                             {{ post.message }}
+                            {% endif %}
                         </p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
