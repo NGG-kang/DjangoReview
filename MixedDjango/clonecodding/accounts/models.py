@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from annoying.fields import AutoOneToOneField
 from django.contrib.auth import get_user_model
+from django_auto_one_to_one import AutoOneToOneModel
 
 
 class User(AbstractUser):
@@ -22,7 +22,6 @@ def user_profile_path(instance, filename):
     return 'instagram/profile/user_{}/{}'.format(instance.user, filename)
 
 
-class Profile(models.Model):
-    user = AutoOneToOneField(User, primary_key=True)
+class Profile(AutoOneToOneModel(User)):
     user_photo = models.ImageField(blank=True, upload_to=user_profile_path)
     status_message = models.CharField(blank=True, max_length=300)
