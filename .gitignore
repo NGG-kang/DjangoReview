@@ -17,7 +17,6 @@ MixedDjango/venv/
 MixedDjango/clonecodding/media/
 Django/Django_practice/venv
 Django/Django_practice/.idea
-Django/Django_practice/project/project/__pycache__
 Django/django_practice/project/project/__pycache__/
 Django/Django_practice/project/db.sqlite3
 Django/django_practice/project/project/__pycache__/settings.cpython-39.pyc
@@ -27,3 +26,4 @@ Django/django_practice/project/instagram/__pycache__/admin.cpython-39.pyc
 *.js
 *.jpg
 testProject/
+MixedDjango/clonecodding/static/
