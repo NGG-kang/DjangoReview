@@ -40,7 +40,7 @@ class PostListView(ListView):
     #             return self.queryset
     def get(self, request, *args, **kwargs):
         if not request.user.is_anonymous:
-            qs = Post.objects.all()
+            qs = Post.objects.filter(author=request.user)
             if qs:
                 paginator, page, queryset, is_paginated = super().paginate_queryset(qs, 9)
                 context = {
@@ -83,6 +83,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         self.object = form.save(commit=False)
         if self.object.author == self.request.user:
             messages.success(self.request, '포스팅 수정 완료')
+            form.save()
         else:
             messages.warning(self.request, '작성한 회원만 수정할 수 있습니다')
         return super().form_valid(form)
