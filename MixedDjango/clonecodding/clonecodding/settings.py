@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'instagram',
     'bootstrap4',
     'debug_toolbar',
-    'annoying',
 ]
 
 MIDDLEWARE = [
@@ -138,7 +137,7 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static'),
 )
 
-LOGIN_REDIRECT_URL = '/instagram/'
+
 
 INTERNAL_IPS = [
     # ...
