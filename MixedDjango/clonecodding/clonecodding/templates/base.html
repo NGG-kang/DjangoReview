@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
-        <div class="my-0 me-md-auto fw-normal" onclick="location.href='{% url 'instagram:post_list' %}'" style="cursor:pointer;">
+        <div class="my-0 me-md-auto fw-normal" onclick="location.href='{% url 'accounts:profile' %}'" style="cursor:pointer;">
             <img alt="Instagram" class="s4Iyt" src="/static/img/logo.png">
         </div>
         <nav class="my-2 my-md-0 me-md-3">
@@ -68,7 +68,7 @@
         <div class="container">
             {% block profile %}
             {% endblock %}
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="container">
                 {% block content %}
                 {% endblock %}
             </div>
