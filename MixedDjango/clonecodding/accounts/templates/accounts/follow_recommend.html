@@ -1,0 +1,15 @@
+
+{% block content %}
+    {% if suggested_user_list %}
+        <div class="container">
+        <ul class="list-group">
+            {% for suggested in suggested_user_list %}
+                <div class="contanier">
+                    <li class="list-group-item">{{suggested}}</li>
+                    <a href="{% url 'accounts:user_follow' suggested %}">팔로우</a>
+                </div>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+{% endblock %}

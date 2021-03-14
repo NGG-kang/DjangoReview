@@ -1,0 +1,15 @@
+
+{% block content %}
+    {% if follower_list %}
+        <div class="container">
+        <ul class="list-group">
+            {% for follower in follower_list %}
+                <div class="contanier">
+                    <li class="list-group-item">{{follower}}</li>
+                    <a href="{% url 'accounts:user_unfollow' follower %}">연팔로우</a>
+                </div>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+{% endblock %}

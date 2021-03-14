@@ -39,10 +39,10 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'accounts:profile' %}">게시물</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">저장됨</a>
+                        <a class="nav-link" href="{% url 'accounts:follow_recommend' %}">팔로워 추천</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">태그됨</a>
+                        <a class="nav-link" href="{% url 'accounts:follower_list' %}">팔로잉 리스트</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
@@ -54,6 +54,7 @@
 </div>
 {% endblock %}
 {% block content %}
-{% include "instagram/post_list.html" %}
-
+    {% include "instagram/post_list.html" %}
+    {% include "accounts/follow_recommend.html" %}
+    {% include "accounts/follower_list.html" %}
 {% endblock %}
