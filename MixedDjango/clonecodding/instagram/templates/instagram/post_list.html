@@ -1,32 +1,34 @@
 {% load bootstrap4 %}
 {% if post_list %}
 {% for post in post_list %}
-<div class="col">
-    <div class="card shadow-sm d-flex justify-content-center">
-        {% if post.photo %}
-        <img src="{{ post.photo.url }}" class="bd-placeholder-img card-img-top"
-             style="width:50%;align-content: center"/>
-        {% else %}
-        <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
-             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#55595c"></rect>
-            <text x="38%" y="50%" fill="#eceeef" dy=".3em">이미지 없음</text>
-        </svg>
-        {% endif %}
-        <div class="card-body">
-            <p class="card-text">
-                {% if post.message %}
-                {{ post.message }}
-                {% endif %}
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary"
-                            onclick="location.href='{% url 'instagram:post_detail' post.id %}'">View
-                    </button>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <div class="col">
+        <div class="card shadow-sm d-flex justify-content-center">
+            {% if post.photo %}
+            <img src="{{ post.photo.url }}" class="bd-placeholder-img card-img-top"
+                 style="width:50%;align-content: center"/>
+            {% else %}
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#55595c"></rect>
+                <text x="38%" y="50%" fill="#eceeef" dy=".3em">이미지 없음</text>
+            </svg>
+            {% endif %}
+            <div class="card-body">
+                <p class="card-text">
+                    {% if post.message %}
+                    {{ post.message }}
+                    {% endif %}
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                onclick="location.href='{% url 'instagram:post_detail' post.id %}'">View
+                        </button>
+                    </div>
+                    <small class="text-muted">9 mins</small>
                 </div>
-                <small class="text-muted">9 mins</small>
             </div>
         </div>
     </div>
