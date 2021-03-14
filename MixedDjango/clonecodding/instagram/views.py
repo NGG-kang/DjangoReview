@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 from django.contrib import messages
-from .models import Post
-from .forms import PostForm
-from django.urls import reverse
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth import get_user_model
 
 # 함수기반
@@ -40,7 +41,11 @@ class PostListView(ListView):
     #             return self.queryset
     def get(self, request, *args, **kwargs):
         if not request.user.is_anonymous:
-            qs = Post.objects.filter(author=request.user)
+            qs = Post.objects.all()\
+            .filter(
+                Q(author__in=request.user.following_set.all()) |
+                Q(author=request.user)
+            )
             if qs:
                 paginator, page, queryset, is_paginated = super().paginate_queryset(qs, 9)
                 context = {
@@ -113,6 +118,41 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
 
 
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            return redirect('instagram:post_detail' ,pk=pk)
+
+    else:
+        comment_list = Comment.objects.filter(post=pk)
+        comment_form = CommentForm()
+
+    return render(request, 'instagram/post_detail.html', {
+        'post': post,
+        'form': comment_form,
+        'comment_list': comment_list,
+    })
+
+def post_like(request,pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.like_user.add(request.user)
+    messages.success(request, f"{post.author} 좋아요")
+    redirect_url = request.META.get("HTTP_REFERER", "root")
+    return redirect(redirect_url)
+
+def post_unlike(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.like_user.remove(request.user)
+    messages.success(request, f"{post.author} 좋아요 취소")
+    redirect_url = request.META.get("HTTP_REFERER", "root")
+    return redirect(redirect_url)
+
 # 함수기반
 # @login_required
 # def post_delete(request, pk):
@@ -135,5 +175,5 @@ post_create = PostCreateView.as_view()
 post_update = PostUpdateView.as_view()
 post_list = PostListView.as_view()
 post_delete = PostDeleteView.as_view()
-post_detail = DetailView.as_view(model=Post)
+
 
