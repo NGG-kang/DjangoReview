@@ -4,7 +4,7 @@ from .models import User,Profile
 # from django.contrib.auth import get_user_model
 
 
-admin.site.register(User, UserAdmin)
+admin.site.register(User)
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
