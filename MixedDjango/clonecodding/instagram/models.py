@@ -19,9 +19,6 @@ class Post(models.Model):
         return reverse('instagram:post_detail', args=[self.pk])
 
 
-
-
-
 class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
