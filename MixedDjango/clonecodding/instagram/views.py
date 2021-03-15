@@ -4,10 +4,13 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 from django.contrib import messages
+
+
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import get_user_model
+
 
 # 함수기반
 # def post_list(request):
@@ -31,7 +34,6 @@ from django.contrib.auth import get_user_model
 
 class PostListView(ListView):
 
-
     # def get_queryset(self):
     # get_queryset의 다음에 페이지네이터가 구현되어 있어서 paginate_by를 쓸 수 있다
     #         if not self.request.user.is_anonymous:
@@ -41,8 +43,8 @@ class PostListView(ListView):
     #             return self.queryset
     def get(self, request, *args, **kwargs):
         if not request.user.is_anonymous:
-            qs = Post.objects.all()\
-            .filter(
+            qs = Post.objects.all() \
+                .filter(
                 Q(author__in=request.user.following_set.all()) |
                 Q(author=request.user)
             )
@@ -116,8 +118,6 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         return redirect('instagram:post_list')
 
 
-
-
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
@@ -127,7 +127,7 @@ def post_detail(request, pk):
             comment.author = request.user
             comment.post = post
             comment.save()
-            return redirect('instagram:post_detail' ,pk=pk)
+            return redirect('instagram:post_detail', pk=pk)
 
     else:
         comment_list = Comment.objects.filter(post=pk)
@@ -139,12 +139,14 @@ def post_detail(request, pk):
         'comment_list': comment_list,
     })
 
-def post_like(request,pk):
+
+def post_like(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.like_user.add(request.user)
     messages.success(request, f"{post.author} 좋아요")
     redirect_url = request.META.get("HTTP_REFERER", "root")
     return redirect(redirect_url)
+
 
 def post_unlike(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -152,6 +154,7 @@ def post_unlike(request, pk):
     messages.success(request, f"{post.author} 좋아요 취소")
     redirect_url = request.META.get("HTTP_REFERER", "root")
     return redirect(redirect_url)
+
 
 # 함수기반
 # @login_required
@@ -176,4 +179,36 @@ post_update = PostUpdateView.as_view()
 post_list = PostListView.as_view()
 post_delete = PostDeleteView.as_view()
 
+#######################################
+
+from rest_framework.viewsets import ModelViewSet
+from .serializers import PostSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework.decorators import api_view
+
+class PostViewSet(ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
+class PostAPIView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
+class PostListAPIView(APIView):
+    def get(self, request):
+        qs = Post.objects.all()
+        serializer = PostSerializer(qs, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def post_api_view(request):
+    qs = Post.objects.all()
+    serializer = PostSerializer(qs, many=True)
+    return Response(serializer.data)
+
+# post_api_view = PostListAPIView.as_view()
 

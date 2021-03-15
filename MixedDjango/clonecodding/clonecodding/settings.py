@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'instagram',
     'bootstrap4',
     'debug_toolbar',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
