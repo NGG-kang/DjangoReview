@@ -4,7 +4,8 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 from django.contrib import messages
-
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.renderers import TemplateHTMLRenderer
 
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
@@ -181,34 +182,63 @@ post_delete = PostDeleteView.as_view()
 
 #######################################
 
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from .serializers import PostSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.decorators import api_view, action
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAuthorOrReadonly
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-
-
-class PostAPIView(generics.ListAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-
-
-class PostListAPIView(APIView):
-    def get(self, request):
-        qs = Post.objects.all()
-        serializer = PostSerializer(qs, many=True)
+    permission_classes = [IsAuthenticated, IsAuthorOrReadonly]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields=['message']
+    ordering=['id']
+    @action(detail=False, methods=['GET'])
+    def message(self, request):
+        qs = self.get_queryset().filter(message__startswith='1')
+        serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-@api_view(['GET'])
-def post_api_view(request):
-    qs = Post.objects.all()
-    serializer = PostSerializer(qs, many=True)
-    return Response(serializer.data)
+    @action(detail=True, methods=['PATCH'])
+    def message_set(self, request, pk):
+        instance = self.get_object()
+        instance.message = '바뀜'
+        instance.save(update_fields=['message'])
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
-# post_api_view = PostListAPIView.as_view()
 
+# class PostAPIView(generics.ListAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+#
+#
+# class PostListAPIView(APIView):
+#     def get(self, request):
+#         qs = Post.objects.all()
+#         serializer = PostSerializer(qs, many=True)
+#         return Response(serializer.data)
+#
+# @api_view(['GET'])
+# def post_api_view2(request):
+#     qs = Post.objects.all()
+#     serializer = PostSerializer(qs, many=True)
+#     return Response(serializer.data)
+
+
+class PostDetailAPIView(RetrieveAPIView):
+    queryset = Post.objects.all()
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name='instagram/mypost.html'
+
+    def get(self, request, *args, **kwargs):
+        post = self.get_object()
+        return Response({
+            'post': PostSerializer(post).data
+        })

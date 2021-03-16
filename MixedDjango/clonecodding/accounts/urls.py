@@ -1,6 +1,7 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path, reverse_lazy, re_path
 from . import views
+from rest_framework.authtoken.views import obtain_auth_token
 
 app_name = 'accounts'
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('follower_list/', views.follower_list, name='follower_list'),
     re_path(r'^(?P<username>[\w.@+-]+)/follows/$', views.user_follow, name='user_follow'),
     re_path(r'^(?P<username>[\w.@+-]+)/unfollows/$', views.user_unfollow, name='user_unfollow'),
+    path('api-token-auth/', obtain_auth_token)
 ]
