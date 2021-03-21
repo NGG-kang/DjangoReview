@@ -1,3 +1,7 @@
+# 리스트나 튜플은 순서가 있기 때문에 인덱싱을 통해 자료형의 값을 얻을 수 있다
+# 사전 자료형과 집합자료형은 순서가 없기 때문에 인덱싱으로 값을 얻을 수 없다
+# 사전의 키 혹은 집합의 원소를 이용해 O(1)의 시간 복잡도로 조회한다
+
 ###############################################
 # 리스트
 list = []
@@ -29,10 +33,25 @@ list.extend(list2)  # iteralbe의 모든 항목을 넣는다 / 문자열이면 �
 # list = [1,2], list2 = [3,4]가 있다고 하면
 # list.append(list2) = [1,2,[3,4]]
 # list.extend(list2) = [1,2,3,4]
-
+list.sort(reverse=True)
+# List comprehension
+n, m = 10, 10
+list = [i for i in list]
+list = [i * 2 for i in list if i % 2 == 1]
+list = [i for i in list for j in list]
+list = [[0] * m for _ in range(n)] # 2차원 배열 초기화
+# 반복을 수행하되 반복을 위한 변수의 값을 무시하고자 할 때 언더바(_) 사용
+# 가로가 m, 세로가 n
+# 열 m, 행 n
 ###############################################
 # 튜플
 # 생성, 삭제, 수정이 불가능
+# 서로 다른 성질의 데이터를 묶어서 관리해야할 때
+# 최단 경로 알고리즘에서는 (비용, 노드번호)의 형태로 튜플 자료형을 자주 사용한다
+# 데이터의 나열을 해싱의 키값으로 사용해야 할 때
+# 튜플은 변경이 불가능하므로 리스트와 다르게 키 값으로 사용될 수 있다
+# 리스트보다 메모리를 효율적으로 사용해야 할 때
+
 tuple = ()
 
 tuple = (1,2,3)
@@ -42,8 +61,10 @@ tuple.count(value) # 특정 value의 개수를 반환
 ###############################################
 # 딕셔너리
 # key와 value를 한 쌍으로 가지고 있다
-# key중복을 허용하지 않음
+# key 중복을 허용하지 않음
+# 변경 불가능한 자료형을 키로 사용이 가능하다
 # 순서가 상관이 없다
+# 해시 테이블을 이용하므로 데이터의 조회 및 수정에 있어서 O(1)의 시간에 처리가 가능하다
 
 dict = {'key': 'value'}
 
@@ -60,7 +81,7 @@ dict.update()           # 여러 데이터를 한번에 업데이트
 dict.get('key', 'default') # key를 토대로 item 반환, 디폴트 값을 줄수있다
                            # 없을시 False 반환하므로 if문에 적합하다
 dict.setdefault(key, 'default_value') # get과 비슷하다, key의 값을 찾고, 없을시 default_value로 지정
-dict.keys()             # keys 리스트 반환
+dict.keys()             # keys 리스트 반환(객체형태 이므로 list()를 사용하여 리스트 형태로 변환해야함)
 dict.values()           # values 리스트 반환
 dict.items()            # 키, 값 튜플목록 반환
 dict.copy()             # 복사본 반환
@@ -72,16 +93,17 @@ dict.fromkeys('value1', 'value2', 'value3') # dict의 key순서에 맞게 value�
 # mutable한 객체
 # 순서가 정해져있지 않고, 중복되지 않는 고유한 요소
 # 중복된 값이 있을시 제거됨
+# 데이터 조회에 있어서  O(1)의 시간복잡도
 s = set()
 s = {1,2,3}
 s2 = {2,3,4,5}
 s-s2 or s.difference(s2)   # 차집합
 s&s2 or s.intersection(s2) # 교집합
-s+s2 or s|s2 or s.union(s2)  # 합집합
+s|s2 or s|s2 or s.union(s2)  # 합집합
 s==s2 # 요소가 같은지
 s.isdisjoint(s2) # 요소와 타입이 같은지
 
-s.add(value)            # 요소 추가
+s.add(value)               # 요소 추가
 s.update({value, value})   # 요소 여러개 추가
 s.update([value, value])   # 중괄호나 대괄호로 추가 가능
 s.remove(value)            # 특정 요소 제거, 없을시 오류
