@@ -8,5 +8,9 @@ WORKDIR /code/
 ADD ./clonecodding /code
 RUN pip3 install -r requirements.txt
 
+ENV PYTHONUNBUFFERED=1
+# ENV AZURE_ACCOUNT_NAME =
+# ENV AZURE_ACCOUNT_KEY =
+
 EXPOSE 8000
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "clonecodding.wsgi:application", "--bind", "0.0.0.0:80"]
