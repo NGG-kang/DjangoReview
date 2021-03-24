@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
 from .forms import UserForm, ProfileForm
@@ -26,7 +27,7 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('instagram:post_list')
+            return redirect('accounts:profile')
     else:
         form = UserForm
     return render(request, 'accounts/signup.html', {
@@ -35,14 +36,18 @@ def signup_view(request):
 
 
 class LogoutView(LogoutView):
-    next_page = reverse_lazy('instagram:post_list')
+    next_page = reverse_lazy('accounts:login')
 
 
 @login_required
 def profile_view(request):
     profile = get_object_or_404(Profile, user_id=request.user.pk)
     # post_list = Post.objects.get(pk=request.user.pk)
-    post_list = Post.objects.filter(author=request.user)
+    post_list = Post.objects.all() \
+                .filter(
+                Q(author__in=request.user.following_set.all()) |
+                Q(author=request.user)
+    )
 
     return render(request, 'accounts/profile.html', {
         'profile': profile,
@@ -117,7 +122,11 @@ class ProfileView(ListView):
     #             return self.queryset
     def get(self, request, *args, **kwargs):
         if not request.user.is_anonymous:
-            qs = Post.objects.filter(author=request.user)
+            qs = Post.objects.all() \
+                .filter(
+                Q(author__in=request.user.following_set.all()) |
+                Q(author=request.user)
+            )
             if qs:
                 paginator, page, queryset, is_paginated = super().paginate_queryset(qs, 9)
                 context = {
