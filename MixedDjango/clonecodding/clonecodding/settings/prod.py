@@ -2,7 +2,7 @@ from .common import *
 DEBUG = False
 # DEBUG = os.environ.get('DEBUG') in ['1', 't', 'true', 'T', 'True']
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = "clonecodding.storages.StaticAzureStorage"
 DEFAULT_FILE_STORAGE = "clonecodding.storages.MediaAzureStorage"
 
