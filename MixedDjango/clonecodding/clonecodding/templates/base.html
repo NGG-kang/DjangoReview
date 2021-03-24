@@ -5,14 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="/static/bootstrap5.0/css/bootstrap.css">
-    <script type="text/javascript" src="/static/bootstrap5.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap5.0/css/bootstrap.css' %}">
+    <script type="text/javascript" src="{% static 'bootstrap5.0/js/bootstrap.min.js' %}"></script>
 </head>
 <body>
 <div class="container">
     <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
         <div class="my-0 me-md-auto fw-normal" onclick="location.href='{% url 'accounts:profile' %}'" style="cursor:pointer;">
-            <img alt="Instagram" class="s4Iyt" src="/static/img/logo.png">
+            <img alt="Instagram" class="s4Iyt" src="{% static 'img/logo.png'%}">
         </div>
         <nav class="my-2 my-md-0 me-md-3">
             <div class="Fifk5">
