@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 RUN apt-get update && \
     apt-get install -y python3-pip python3-dev && \
@@ -13,4 +13,4 @@ ENV PYTHONUNBUFFERED=1
 # ENV AZURE_ACCOUNT_KEY =
 
 EXPOSE 8000
-CMD ["gunicorn", "clonecodding.wsgi:application", "--bind", "0.0.0.0:80"]
+CMD ["gunicorn", "clonecodding.wsgi:application", "--bind", "0.0.0.0:8000"]
