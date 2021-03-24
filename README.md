@@ -771,3 +771,41 @@ stack, queue 다시 살짝 공부하고, DFS, BFS 예시와 설명을 듣고
 
 azure 배포 마무리하기
 
+
+
+##### 2021-03-24
+
+오늘 한 일
+
+1. 리눅스 버전 20.04 -> 18.04
+2. 포트 80 -> 8000
+
+docker build -t azuredj .
+docker tag auzredj skarndrkd/azuredj:3.3
+docker push skarndrkd/azuredj:3.3
+
+collectstatic은 설치한 라이브러리 스태틱만 가져온다...
+bootstrap은 다운받아온거니 안가져옴
+그래서 azure에서 업로드 해줘야 하는데 웹에서는 한개씩밖에 업로드 몬함
+auzre storage explorer라는 프로그램을 사용하여 폴더 업로드 가능
+
+근데 왜 스태틱 못받아옴?
+미디어는 잘 되는데요?
+
+아하 
+{% static 'url' %}
+이걸 써야 했었는데
+절대경로 url로 써서 에러가 났었네 ㅎㅎ!
+다시 위의 템플릿 태그 static을 써서 고쳤다
+
+팔로워 추천에서 kang이라는 사람이 kang2를 팔로우 하면
+kang2에서도 kang이 팔로우가 되어버리네?
+아악 망할
+
+
+
+내일 할일
+
+이진탐색 강의
+
+다시 django 프로젝트 시작하기, azure로 계속 업로드 해서 사이트 유지하기
