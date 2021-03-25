@@ -96,7 +96,7 @@ def follower_list(request):
 def user_follow(request, username):
     follow_user = get_object_or_404(User, username=username, is_active=True)
     request.user.following_set.add(follow_user)
-    follow_user.following_set.add(request.user)
+    follow_user.follower_set.add(request.user)
     messages.success(request, f"{follow_user}님을 팔로우 했습니다.")
     redirect_url = request.META.get("HTTP_REFERER", "root")
     return redirect(redirect_url)
@@ -105,7 +105,7 @@ def user_follow(request, username):
 def user_unfollow(request, username):
     unfollow_user = get_object_or_404(User, username=username, is_active=True)
     request.user.following_set.remove(unfollow_user)
-    unfollow_user.following_set.remove(request.user)
+    # unfollow_user.follower_set.remove(request.user)
     messages.success(request, f"{unfollow_user}님을 언팔로우 했습니다.")
     redirect_url = request.META.get("HTTP_REFERER", "root")
     return redirect(redirect_url)
