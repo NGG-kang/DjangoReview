@@ -24,8 +24,14 @@
         <div class="container mt-3">
             <a href="{% url 'instagram:post_update' post.id %}" class="btn btn-primary">포스팅 수정</a>
             <a href="{% url 'instagram:post_delete' post.id %}" class="btn btn-primary">포스팅 삭제</a>
-                <a href="{% url 'instagram:post_like' post.id %}" class="btn btn-primary">포스팅 좋아요</a>
-                <a href="{% url 'instagram:post_unlike' post.id %}" class="btn btn-primary">좋아요 취소</a>
+            {% if request.user != post.author %}
+                {% if post.like_user != request.user %}
+                    <a href="{% url 'instagram:post_like' post.id %}" class="btn btn-primary">포스팅 좋아요</a>
+                {% else %}
+                    <a href="{% url 'instagram:post_unlike' post.id %}" class="btn btn-primary">좋아요 취소</a>
+                {% endif %}
+            {% endif %}
+
         </div>
     </div>
     <div class="container">
