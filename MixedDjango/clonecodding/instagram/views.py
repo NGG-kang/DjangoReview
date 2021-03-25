@@ -143,6 +143,9 @@ def post_detail(request, pk):
 
 def post_like(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    if request.user==post.author:
+        messages.warning(request, "작성한 회원은 좋아요를 누를수 없습니다")
+        return redirect('instagram:post_detail', pk=pk)
     post.like_user.add(request.user)
     messages.success(request, f"{post.author} 좋아요")
     redirect_url = request.META.get("HTTP_REFERER", "root")
@@ -156,6 +159,28 @@ def post_unlike(request, pk):
     redirect_url = request.META.get("HTTP_REFERER", "root")
     return redirect(redirect_url)
 
+
+def comment_delete(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.delete()
+    return redirect('instagram:post_detail')
+
+
+def comment_edit(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = request.post
+            comment.save()
+            return redirect('instagram:post_detail')
+    comment_form = CommentForm(comment)
+    return render(request, 'instagram/comment.html', {
+        comment: comment,
+        form: comment_form
+    })
 
 # 함수기반
 # @login_required

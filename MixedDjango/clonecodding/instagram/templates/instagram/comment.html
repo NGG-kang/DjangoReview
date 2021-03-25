@@ -8,11 +8,13 @@
             <ul>
             {% for comment in comment_list %}
                 <li>{{comment.comment}}</li>
+                <a class="btn btn-primary" href="{% url 'instagram:comment_edit' comment.pk %}">수정</a>
+                <a class="btn btn-primary" href="{% url 'instagram:comment_delete' comment.pk %}">삭제</a>
             {% endfor %}
-                </ul>
+            </ul>
         {% endif %}
     </div>
     <div class="container">
     {% include "form.html" with submit_label="코멘트 저장" %}
-        </div>
+    </div>
 {% endblock %}
