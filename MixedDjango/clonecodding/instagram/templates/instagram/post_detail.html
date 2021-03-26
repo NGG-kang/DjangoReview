@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container-xxl">
     <div class="container">
-        <div class="card">
+        <div class="card text-center">
             {% if post.photo %}
-            <img src="{{ post.photo.url }}" class="card-img-top" alt="post_photo">
+            <img src="{{ post.photo.url }}" class="rounded mx-auto d-block" alt="post_photo" style="width:25%">
             {% else %}
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
                  xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
@@ -21,7 +21,7 @@
             </div>
 
         </div>
-        <div class="container mt-3">
+        <div class="container mt-3 text-end">
             <a href="{% url 'instagram:post_update' post.id %}" class="btn btn-primary">포스팅 수정</a>
             <a href="{% url 'instagram:post_delete' post.id %}" class="btn btn-primary">포스팅 삭제</a>
             {% if request.user != post.author %}
@@ -35,6 +35,7 @@
         </div>
     </div>
     <div class="container">
+        <div class="container">댓글</div>
         {% include 'instagram/comment.html' %}
     </div>
 
