@@ -4,11 +4,10 @@
 {% block profile %}
 <div class="container">
     <div class="container">
-        <div class="row">
+        <div class="row text-center">
             {% if profile %}
-
             {% if profile.user_photo %}
-            <img src="{{ profile.user_photo.url }}" alt="{{ profile.user }}" class="rounded-circle"
+            <img src="{{ profile.user_photo.url }}" alt="{{ profile.user }}" class="rounded mx-auto d-block"
                  style="width:25%;align-content: center"/>
             {% else %}
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
@@ -18,8 +17,10 @@
                 <text x="38%" y="50%" fill="#eceeef" dy=".3em">이미지 없음</text>
             </svg>
             {% endif %}
+            <div class="container">
             {{ profile.user }}
-            <div>
+                </div>
+            <div class="container">
                 상태메세지
                 <div>
                     {{ profile.status_message }}
