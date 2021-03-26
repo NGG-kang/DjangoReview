@@ -7,9 +7,11 @@
         {% if comment_list %}
             <ul>
             {% for comment in comment_list %}
+                <li>작성자 :{{comment.author}}</li>
                 <li>{{comment.comment}}</li>
+                {% if request.user == comment.author %}
                 <a class="btn btn-primary" href="{% url 'instagram:comment_edit' comment.pk %}">수정</a>
-                <a class="btn btn-primary" href="{% url 'instagram:comment_delete' comment.pk %}">삭제</a>
+                {% endif %}
             {% endfor %}
             </ul>
         {% endif %}
