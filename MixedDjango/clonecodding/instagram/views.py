@@ -68,7 +68,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
 
     def form_valid(self, form):
-        print(form.cleaned_data)
         self.object = form.save(commit=False)
         self.object.author = self.request.user
         messages.success(self.request, '포스팅 저장 완료')
@@ -119,6 +118,32 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         return redirect('instagram:post_list')
 
 
+class PostDetailView(DetailView):
+    model = Post
+
+
+    def get_context_data(self, **kwargs):
+
+        comment_list = Comment.objects.filter(post=kwargs.get('pk'))
+        comment_form = CommentForm()
+        context = {
+            'comment_list': comment_list,
+            'form': comment_form
+        }
+        return super().get_context_data(**context)
+
+    def post(self, request, **kwargs):
+        form = CommentForm(request.POST)
+        ppost = get_object_or_404(Post, pk=kwargs.get('pk'))
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = self.get_object(ppost)
+            comment.save()
+            return redirect('instagram:post_detail', pk=kwargs.get('pk'))
+
+
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
@@ -167,7 +192,7 @@ def comment_delete(request, pk):
 
 
 def comment_edit(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
+    post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -176,10 +201,9 @@ def comment_edit(request, pk):
             comment.post = request.post
             comment.save()
             return redirect('instagram:post_detail')
-    comment_form = CommentForm(comment)
-    return render(request, 'instagram/comment.html', {
-        comment: comment,
-        form: comment_form
+
+    return render(request, 'instagram/post_detail.html', {
+        post: post,
     })
 
 # 함수기반
