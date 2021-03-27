@@ -121,10 +121,10 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 class PostDetailView(DetailView):
     model = Post
 
-
     def get_context_data(self, **kwargs):
-
-        comment_list = Comment.objects.filter(post=kwargs.get('pk'))
+        print(kwargs.get('object'))
+        print(kwargs)
+        comment_list = Comment.objects.filter(post=kwargs.get('object'))
         comment_form = CommentForm()
         context = {
             'comment_list': comment_list,
@@ -134,11 +134,10 @@ class PostDetailView(DetailView):
 
     def post(self, request, **kwargs):
         form = CommentForm(request.POST)
-        ppost = get_object_or_404(Post, pk=kwargs.get('pk'))
         if form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user
-            comment.post = self.get_object(ppost)
+            comment.post = super().get_object()
             comment.save()
             return redirect('instagram:post_detail', pk=kwargs.get('pk'))
 
