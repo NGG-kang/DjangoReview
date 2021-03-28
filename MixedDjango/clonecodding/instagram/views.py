@@ -122,8 +122,6 @@ class PostDetailView(DetailView):
     model = Post
 
     def get_context_data(self, **kwargs):
-        print(kwargs.get('object'))
-        print(kwargs)
         comment_list = Comment.objects.filter(post=kwargs.get('object'))
         comment_form = CommentForm()
         context = {
@@ -141,6 +139,19 @@ class PostDetailView(DetailView):
             comment.save()
             return redirect('instagram:post_detail', pk=kwargs.get('pk'))
 
+    def get(self, request, *args, **kwargs):
+        pk = request.GET.get('pk', '')
+        if pk:
+            comment = Comment.objects.all().filter(pk=pk)
+            self.object = self.get_object()
+            comment_edit_form = CommentForm(comment)
+            context = self.get_context_data(object=self.object)
+            print(context['form'])
+            context['form'] = comment_edit_form
+        else:
+            self.object = self.get_object()
+            context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
 
 def post_detail(request, pk):

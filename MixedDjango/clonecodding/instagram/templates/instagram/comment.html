@@ -1,22 +1,33 @@
-
 {% load bootstrap4 %}
 
 
 {% block content %}
-    <div class="container">
-        {% if comment_list %}
-            <ul>
-            {% for comment in comment_list %}
-                <li>작성자 :{{comment.author}}</li>
-                <li>{{comment.comment}}</li>
-                {% if request.user == comment.author %}
-                <a class="btn btn-primary" href="{% url 'instagram:comment_edit' comment.pk %}">수정</a>
-                {% endif %}
-            {% endfor %}
-            </ul>
+<div class="container">
+    {% if comment_list %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for comment in comment_list %}
+        <div class="col">
+            <div>작성자 :{{comment.author}}</div>
+            <div>{{comment.comment}}</div>
+            {% if request.user == comment.author %}
+            <div>
+                <form action="" method="get">
+                    <input type="hidden" name="pk" value="{{ comment.pk }}">
+                    <button type="submit">댓글수정</button>
+                </form>
+            </div>
+        </div>
+
         {% endif %}
+        {% endfor %}
     </div>
-    <div class="container">
-    {% include "form.html" with submit_label="코멘트 저장" %}
-    </div>
+    {% endif %}
+</div>
+<div class="container">
+    {% if comment_edit_form %}
+        {% include "instagram/form.html" with submit_label="코멘트 수정" %}
+    {% else %}
+        {% include "form.html" with submit_label="코멘트 저장" %}
+    {% endif %}
+</div>
 {% endblock %}
