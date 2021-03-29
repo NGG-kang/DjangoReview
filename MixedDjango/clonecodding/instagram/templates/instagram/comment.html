@@ -1,7 +1,4 @@
-{% load bootstrap4 %}
-
-
-{% block content %}
+{% load bootstrap4 %} {% block content %}
 <div class="container">
     {% if comment_list %}
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -11,15 +8,15 @@
             <div>{{comment.comment}}</div>
             {% if request.user == comment.author %}
             <div>
-                <form action="" method="get">
-                    <input type="hidden" name="pk" value="{{ comment.pk }}">
+                <form id="post-{{ comment.pk }}-comment-form" action="{% url 'instagram:comment_edit' post.pk %}"
+                      method="get">
+                    <input type="hidden" name="pk" value="{{ comment.pk }}"/>
                     <button type="submit">댓글수정</button>
                 </form>
             </div>
         </div>
 
-        {% endif %}
-        {% endfor %}
+        {% endif %} {% endfor %}
     </div>
     {% endif %}
 </div>
@@ -31,3 +28,26 @@
     {% endif %}
 </div>
 {% endblock %}
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+  $(function () {
+    var form_id = "post-{{ comment.pk }}-comment-form";
+    $("#" + form_id).submit(function (e) {
+      e.preventDefault();
+
+      var options = {
+        success: function (respnseText, statusText, xhr, $form) {
+          console.group("ajaxSubmit response");
+          console.log(respnseText);
+          console.log(statusText);
+          console.log(xhr);
+          console.log($form);
+          console.groupEnd();
+          $("#post-19-comment-list").prepend(respnseText);
+        },
+      };
+      $(this).ajaxSubmit(options);
+    });
+  });
+
+</script>
