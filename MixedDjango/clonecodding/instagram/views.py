@@ -1,6 +1,9 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 from django.contrib import messages
@@ -139,26 +142,26 @@ class PostDetailView(DetailView):
             comment.save()
             return redirect('instagram:post_detail', pk=kwargs.get('pk'))
 
-    # def get(self, request, *args, **kwargs):
-    #     pk = request.GET.get('pk', '')
-    #     if pk:
-    #         comment = Comment.objects.get(pk=pk)
-    #         self.object = self.get_object()
-    #         comment_edit_form = CommentForm(comment)
-    #         context = self.get_context_data(object=self.object)
-    #         print(context['form'])
-    #         context['form'] = comment_edit_form
-    #         if request.is_ajax():
-    #             return render(request, "instagram/comment.html", {
-    #                 "form": comment_edit_form,
-    #             })
-    #         else:
-    #             print("ajax 요청 아님")
-    #         return redirect(comment.post)
-    #     else:
-    #         self.object = self.get_object()
-    #         context = self.get_context_data(object=self.object)
-    #     return self.render_to_response(context)
+    def get(self, request, *args, **kwargs):
+        pk = request.GET.get('pk', '')
+        if pk:
+            comment = Comment.objects.get(pk=pk)
+            self.object = self.get_object()
+            comment_edit_form = CommentForm(comment)
+            context = self.get_context_data(object=self.object)
+            print(context['form'])
+            context['form'] = comment_edit_form
+            if request.is_ajax():
+                return render(request, "instagram/comment.html", {
+                    "form": comment_edit_form,
+                })
+            else:
+                print("ajax 요청 아님")
+            return redirect(comment.post)
+        else:
+            self.object = self.get_object()
+            context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
 
 def post_detail(request, pk):
@@ -211,44 +214,17 @@ def comment_delete(request, pk):
 def comment_edit(request, pk):
     comment_pk = request.GET.get('pk', '')
     if comment_pk:
-        comment = Comment.objects.get(pk=comment_pk)
-        comment_edit_form = CommentForm(comment)
-        if request.is_ajax():
-            return render(request, "instagram/comment.html", {
-                "form": comment_edit_form,
-            })
-        else:
-            print("ajax 요청 아님")
-    return redirect(comment.post)
+        print("pk 있음")
+        comment = Comment.objects.filter(pk=comment_pk)
+        print(comment)
+        comment_form = CommentForm()
+        print(comment_form, "코멘트 폼")
+        context = {'form': comment_form}
 
+    else:
+        context = {'error': 'error'}
+    return HttpResponse(json.dumps(context), context_type="application/json")
 
-class CommentEdit(DetailView):
-    model = Post
-
-    def get_context_data(self, **kwargs):
-        comment_list = Comment.objects.filter(post=kwargs.get('object'))
-        context = {
-            'comment_list': comment_list,
-        }
-        return super().get_context_data(**context)
-
-    def post(self, request, **kwargs):
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.post = super().get_object()
-            comment.save()
-            return redirect('instagram:post_detail', pk=kwargs.get('pk'))
-
-    def get(self, request, *args, **kwargs):
-        pk = request.GET.get('pk', '')
-        comment = Comment.objects.all().filter(pk=pk)
-        self.object = self.get_object()
-        comment_edit_form = CommentForm(comment)
-        context = self.get_context_data(object=self.object)
-        context['comment_edit_form'] = comment_edit_form
-        return self.render_to_response(context)
 
 
 # 함수기반
@@ -268,7 +244,7 @@ class CommentEdit(DetailView):
 #     return render(request, 'instagram/post_delete.html', {
 #     })
 
-#
+
 post_create = PostCreateView.as_view()
 post_update = PostUpdateView.as_view()
 post_list = PostListView.as_view()

@@ -8,11 +8,8 @@
             <div>{{comment.comment}}</div>
             {% if request.user == comment.author %}
             <div>
-                <form id="post-{{ comment.pk }}-comment-form" action="{% url 'instagram:comment_edit' post.pk %}"
-                      method="get">
                     <input type="hidden" name="pk" value="{{ comment.pk }}"/>
-                    <button type="submit">댓글수정</button>
-                </form>
+                    <button class="btn btn-primary comment_edit" name="{{ comment.pk }}" type="submit">댓글수정</button>
             </div>
         </div>
 
@@ -30,24 +27,22 @@
 {% endblock %}
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
-  $(function () {
-    var form_id = "post-{{ comment.pk }}-comment-form";
-    $("#" + form_id).submit(function (e) {
-      e.preventDefault();
 
-      var options = {
-        success: function (respnseText, statusText, xhr, $form) {
-          console.group("ajaxSubmit response");
-          console.log(respnseText);
-          console.log(statusText);
-          console.log(xhr);
-          console.log($form);
-          console.groupEnd();
-          $("#post-19-comment-list").prepend(respnseText);
-        },
-      };
-      $(this).ajaxSubmit(options);
+    $(".comment_edit").click(function () {
+        var pk = $(this).attr('name')
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'instagram:comment_edit' post.pk %}",
+            data: { 'pk': pk },
+            dataType: "json",
+            success: function (response) {
+                alert(response)
+            },
+            error: function (request, status, error) {
+            alert("실패")
+            },
+        });
     });
-  });
 
 </script>
