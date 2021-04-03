@@ -147,17 +147,20 @@ class PostDetailView(DetailView):
         if pk:
             comment = Comment.objects.get(pk=pk)
             self.object = self.get_object()
-            comment_edit_form = CommentForm(comment)
+            initial_dict = {
+                "comment": comment.comment,
+            }
+            form = CommentForm(request.POST or None, initial=initial_dict)
+            self.object = self.get_object()
             context = self.get_context_data(object=self.object)
-            print(context['form'])
-            context['form'] = comment_edit_form
-            if request.is_ajax():
-                return render(request, "instagram/comment.html", {
-                    "form": comment_edit_form,
-                })
-            else:
-                print("ajax 요청 아님")
-            return redirect(comment.post)
+            context["form"] = form
+            context["comment_message"] = comment.comment
+            return self.render_to_response(context)
+            # return render(request, "instagram/form.html", {
+            #     "comment_edit_form": comment_edit_form,
+            #     "comment_message": comment.comment
+            # })
+
         else:
             self.object = self.get_object()
             context = self.get_context_data(object=self.object)

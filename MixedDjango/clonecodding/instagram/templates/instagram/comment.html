@@ -8,8 +8,9 @@
             <div>{{comment.comment}}</div>
             {% if request.user == comment.author %}
             <div>
-                    <input type="hidden" name="pk" value="{{ comment.pk }}"/>
-                    <button class="btn btn-primary comment_edit" name="{{ comment.pk }}" type="submit">댓글수정</button>
+                <form action="" method="get">
+                    <button class="btn btn-primary" type="submit">댓글수정</button>
+                </form>
             </div>
         </div>
 
@@ -25,24 +26,4 @@
     {% endif %}
 </div>
 {% endblock %}
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script>
 
-    $(".comment_edit").click(function () {
-        var pk = $(this).attr('name')
-
-        $.ajax({
-            type: "GET",
-            url: "{% url 'instagram:comment_edit' post.pk %}",
-            data: { 'pk': pk },
-            dataType: "json",
-            success: function (response) {
-                alert(response)
-            },
-            error: function (request, status, error) {
-            alert("실패")
-            },
-        });
-    });
-
-</script>
