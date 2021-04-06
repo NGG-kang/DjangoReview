@@ -135,26 +135,36 @@ class PostDetailView(DetailView):
 
     def post(self, request, **kwargs):
         form = CommentForm(request.POST)
+        print(form)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.author = request.user
-            comment.post = super().get_object()
-            comment.save()
+            if comment.author == request.user:
+                comment._do_update(update_fields=list(comment))
+            else:
+                comment.author = request.user
+                comment.post = super().get_object()
+                comment.save()
             return redirect('instagram:post_detail', pk=kwargs.get('pk'))
 
     def get(self, request, *args, **kwargs):
         pk = request.GET.get('pk', '')
+
         if pk:
             comment = Comment.objects.get(pk=pk)
+            if comment.author != request.user:
+                messages.warning(request, message="작성자가 아닙니다")
+                return
+
             self.object = self.get_object()
             initial_dict = {
                 "comment": comment.comment,
+                "author": comment.author,
+                "post": comment.post,
             }
             form = CommentForm(request.POST or None, initial=initial_dict)
             self.object = self.get_object()
             context = self.get_context_data(object=self.object)
             context["form"] = form
-            context["comment_message"] = comment.comment
             return self.render_to_response(context)
             # return render(request, "instagram/form.html", {
             #     "comment_edit_form": comment_edit_form,
@@ -208,26 +218,15 @@ def post_unlike(request, pk):
     return redirect(redirect_url)
 
 
-def comment_delete(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
+def comment_delete(request, pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
     comment.delete()
-    return redirect('instagram:post_detail')
+    return redirect('instagram:post_detail', pk=pk)
 
-
-def comment_edit(request, pk):
-    comment_pk = request.GET.get('pk', '')
-    if comment_pk:
-        print("pk 있음")
-        comment = Comment.objects.filter(pk=comment_pk)
-        print(comment)
-        comment_form = CommentForm()
-        print(comment_form, "코멘트 폼")
-        context = {'form': comment_form}
-
-    else:
-        context = {'error': 'error'}
-    return HttpResponse(json.dumps(context), context_type="application/json")
-
+def comment_edit(request, pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    comment.delete()
+    return redirect('instagram:post_detail', pk=pk)
 
 
 # 함수기반
