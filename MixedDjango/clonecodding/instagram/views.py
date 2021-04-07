@@ -135,15 +135,11 @@ class PostDetailView(DetailView):
 
     def post(self, request, **kwargs):
         form = CommentForm(request.POST)
-        print(form)
         if form.is_valid():
             comment = form.save(commit=False)
-            if comment.author == request.user:
-                comment._do_update(update_fields=list(comment))
-            else:
-                comment.author = request.user
-                comment.post = super().get_object()
-                comment.save()
+            comment.author = request.user
+            comment.post = super().get_object()
+            comment.save()
             return redirect('instagram:post_detail', pk=kwargs.get('pk'))
 
     def get(self, request, *args, **kwargs):
@@ -164,7 +160,8 @@ class PostDetailView(DetailView):
             form = CommentForm(request.POST or None, initial=initial_dict)
             self.object = self.get_object()
             context = self.get_context_data(object=self.object)
-            context["form"] = form
+            context["comment_edit_form"] = form
+            context["comment_pk"] = comment.pk
             return self.render_to_response(context)
             # return render(request, "instagram/form.html", {
             #     "comment_edit_form": comment_edit_form,
@@ -223,9 +220,17 @@ def comment_delete(request, pk, comment_pk):
     comment.delete()
     return redirect('instagram:post_detail', pk=pk)
 
+
 def comment_edit(request, pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
-    comment.delete()
+    form = CommentForm(request.POST or None,
+                       instance=comment)
+    if request.method == 'POST':
+        if form.is_valid():
+            comment_form = form.save(commit=False)
+            comment_form.comment = request.POST.get("comment")
+            comment_form.save()
+
     return redirect('instagram:post_detail', pk=pk)
 
 
